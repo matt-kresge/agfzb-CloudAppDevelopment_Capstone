@@ -9,9 +9,9 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 
-# Get an instance of a logger
+# Get an instance of a logger 
 logger = logging.getLogger(__name__)
 
 
@@ -66,7 +66,7 @@ def registration_request(request):
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     if request.method == "GET":
-        url = "https://mattkresge13-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+        url = "https://mattkresge13-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
@@ -75,8 +75,11 @@ def get_dealerships(request):
         return HttpResponse(dealer_names)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    url = "https://mattkresge13-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id=" + str(dealer_id)
+    reviews = get_dealer_reviews_from_cf(url, dealer_id)
+    review_list = "Reviews from dealer " + str(dealer_id) + ": " + ', '.join([rev.review for rev in reviews])
+    return HttpResponse(review_list)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
