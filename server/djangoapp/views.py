@@ -78,7 +78,9 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     url = "https://mattkresge13-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id=" + str(dealer_id)
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
-    review_list = "Reviews from dealer " + str(dealer_id) + ": " + ', '.join([rev.review for rev in reviews])
+    review_list = "Reviews from dealer " + str(dealer_id) + ": "
+    for rev in reviews:
+        review_list = review_list + "|| " + rev.review + ", SENTIMENT: " + rev.sentiment
     return HttpResponse(review_list)
 
 # Create a `add_review` view to submit a review
